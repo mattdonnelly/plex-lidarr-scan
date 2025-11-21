@@ -65,7 +65,7 @@ app.listen(port, () => {
 
 (async () => {
   try {
-    const testUrl = `http://${plex.host}:32400/library/sections/${plex.sectionId}?X-Plex-Token=${plex.token}`;
+    const testUrl = `http://${plex.host}/library/sections/${plex.sectionId}?X-Plex-Token=${plex.token}`;
     await axios.get(testUrl);
     console.log("Plex authentication successful");
   } catch (err) {
