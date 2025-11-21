@@ -26,6 +26,15 @@ if (!plex || !plex.host || !plex.sectionId || !plex.token) {
   process.exit(1);
 }
 
+try {
+  const testUrl = `http://${plex.host}/library/sections/${plex.sectionId}?X-Plex-Token=${plex.token}`;
+  await axios.get(testUrl);
+  console.log("Plex authentication successful");
+} catch (err) {
+  console.error("Failed to authenticate with Plex:", err.message);
+  process.exit(1);
+}
+
 const app = express();
 app.use(express.json());
 
@@ -62,14 +71,3 @@ app.post("/webhook", async (req, res) => {
 app.listen(port, () => {
   console.log(`plex-lidarr-scan listening on port ${port}`);
 });
-
-(async () => {
-  try {
-    const testUrl = `http://${plex.host}/library/sections/${plex.sectionId}?X-Plex-Token=${plex.token}`;
-    await axios.get(testUrl);
-    console.log("Plex authentication successful");
-  } catch (err) {
-    console.error("Failed to authenticate with Plex:", err.message);
-    process.exit(1);
-  }
-})();
