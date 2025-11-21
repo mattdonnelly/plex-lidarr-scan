@@ -18,7 +18,7 @@ try {
   process.exit(1);
 }
 
-const { plex } = config;
+const { plex, port = 15033 } = config;
 if (!plex || !plex.ip || !plex.sectionId || !plex.token) {
   console.error(
     "Invalid Plex config. Expected keys: plex.ip, plex.sectionId, plex.token"
@@ -59,7 +59,6 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(port, () => {
   console.log(`plex-lidarr-scan listening on port ${PORT}`);
 });
