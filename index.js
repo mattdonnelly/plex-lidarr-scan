@@ -1,8 +1,8 @@
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const yaml = require("js-yaml");
-const axios = require("axios");
+import express from "express";
+import fs from "fs";
+import path from "path";
+import yaml from "js-yaml";
+import axios from "axios";
 
 const configPath = path.join(
   process.env.HOME || process.env.USERPROFILE,
@@ -19,9 +19,9 @@ try {
 }
 
 const { plex, port = 15033 } = config;
-if (!plex || !plex.ip || !plex.sectionId || !plex.token) {
+if (!plex || !plex.host || !plex.sectionId || !plex.token) {
   console.error(
-    "Invalid Plex config. Expected keys: plex.ip, plex.sectionId, plex.token"
+    "Invalid Plex config. Expected keys: plex.host, plex.sectionId, plex.token"
   );
   process.exit(1);
 }
@@ -40,7 +40,7 @@ app.post("/webhook", async (req, res) => {
     const firstFile = payload.trackFiles[0];
     const folderPath = path.dirname(firstFile.path);
 
-    const url = `http://${plex.ip}:32400/library/sections/${plex.sectionId}/refresh`;
+    const url = `http://${plex.host}/library/sections/${plex.sectionId}/refresh`;
 
     console.log(`Triggering Plex scan for folder: ${folderPath}`);
 
@@ -65,7 +65,7 @@ app.listen(port, () => {
 
 (async () => {
   try {
-    const testUrl = `http://${plex.ip}:32400/library/sections/${plex.sectionId}?X-Plex-Token=${plex.token}`;
+    const testUrl = `http://${plex.host}:32400/library/sections/${plex.sectionId}?X-Plex-Token=${plex.token}`;
     await axios.get(testUrl);
     console.log("Plex authentication successful");
   } catch (err) {
